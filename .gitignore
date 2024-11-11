@@ -1,0 +1,24 @@
+# Python bytecode and cache files
+**/__pycache__/
+**/*.py[cod]
+
+# Environment variables and virtual environments
+venv/
+.env
+test/
+
+# IDE configurations and metadata files (optional but recommended)
+.vscode/
+.idea/
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Secrets and credentials
+agents/credentials.json
+agents/token.json
+agents/token.pickle
