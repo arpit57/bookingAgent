@@ -4,7 +4,7 @@ from openai import OpenAI
 from enum import Enum
 import json
 
-from specialized_agents.policy_agent import query_company_policies
+from specialized_agents.policy_agent import search_docs
 from specialized_agents.booking_agent import book_appointment
 
 # Define the possible actions
@@ -29,7 +29,7 @@ def primary_agent(state: GraphState):
     Primary agent that decides the next action based on user input
     """
     prompt = f"""Given the user input, determine the most appropriate action:
-    - If the query is about company policies or rules, respond with '{AgentAction.POLICY_QUERY}'
+    - If the query is about shop sphere(an e-commerce company) or if the query is missing some context that could be shop sphere, respond with '{AgentAction.POLICY_QUERY}'
     - If the query is about scheduling or booking appointments, respond with '{AgentAction.BOOKING}'
     - If it's a general query that can be answered directly, respond with '{AgentAction.FINAL_RESPONSE}'
     
@@ -53,8 +53,9 @@ def policy_agent(state: GraphState):
     Agent that handles company policy related queries using RAG
     """
     # Placeholder for actual RAG implementation
-    policy_response = query_company_policies(state['input'])
+    policy_response = search_docs(state['input'])
     state['context']['policy_info'] = policy_response
+    print(f"### state at end of policy agent: {state}")
     return state
 
 def booking_agent(state: GraphState):
@@ -70,10 +71,14 @@ def response_generator(state: GraphState):
     """
     Generate the final response based on the context and previous agent outputs
     """
+    # print(f"### state at start of response generator: {state}")
     context = json.dumps(state['context'])
     
     prompt = f"""Generate a helpful and coherent response to the user's query using the available context.
-    
+    Context come from agents:
+    policy agent: no need to mofify the context of this agent. 
+    booking agent: performs google calendar booking. it gives booking info in json. make sense of the actions performed and respond in natural language.
+       
     User Input: {state['input']}
     Context: {context}
     
