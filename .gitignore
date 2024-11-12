@@ -22,3 +22,5 @@ Thumbs.db
 agents/credentials.json
 agents/token.json
 agents/token.pickle
+agents/specialized_agents/credentials.json
+agents/specialized_agents/token.pickle

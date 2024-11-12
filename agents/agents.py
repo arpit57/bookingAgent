@@ -4,9 +4,8 @@ from openai import OpenAI
 from enum import Enum
 import json
 
-# Assume these are imported from other files
-from specialized_agents.policy_agent import query_company_policies  # placeholder
-from specialized_agents.booking_agent import book_appointment  # placeholder
+from specialized_agents.policy_agent import query_company_policies
+from specialized_agents.booking_agent import book_appointment
 
 # Define the possible actions
 class AgentAction(str, Enum):
