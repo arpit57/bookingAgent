@@ -6,11 +6,13 @@ import json
 
 from specialized_agents.policy_agent import search_docs
 from specialized_agents.booking_agent import book_appointment
+from specialized_agents.products_agent import search_products
 
 # Define the possible actions
 class AgentAction(str, Enum):
     POLICY_QUERY = "policy_query"
     BOOKING = "booking"
+    DB_QUERY = "db_query"
     FINAL_RESPONSE = "final_response"
 
 # Define state
@@ -29,8 +31,9 @@ def primary_agent(state: GraphState):
     Primary agent that decides the next action based on user input
     """
     prompt = f"""Given the user input, determine the most appropriate action:
-    - If the query is about shop sphere(an e-commerce company) or if the query is missing some context that could be shop sphere, respond with '{AgentAction.POLICY_QUERY}'
+    - If the query is about shop sphere(an e-commerce company) or anything that could be related to it, respond with '{AgentAction.POLICY_QUERY}'
     - If the query is about scheduling or booking appointments, respond with '{AgentAction.BOOKING}'
+    - If the query is about a product information, respond with '{AgentAction.DB_QUERY}'
     - If it's a general query that can be answered directly, respond with '{AgentAction.FINAL_RESPONSE}'
     
     User Input: {state['input']}
@@ -67,6 +70,14 @@ def booking_agent(state: GraphState):
     state['context']['booking_info'] = booking_response
     return state
 
+def products_agent(state: GraphState):
+    """
+    Agent that handles product information
+    """
+    products_response = search_products(state['input'])
+    state['context']['products_info'] = products_response
+    return state
+
 def response_generator(state: GraphState):
     """
     Generate the final response based on the context and previous agent outputs
@@ -78,11 +89,14 @@ def response_generator(state: GraphState):
     Context come from agents:
     policy agent: no need to mofify the context of this agent. 
     booking agent: performs google calendar booking. it gives booking info in json. make sense of the actions performed and respond in natural language.
-       
+    products agent: make sense of the product from info and help user understand the product.
+    
     User Input: {state['input']}
     Context: {context}
     
-    Generate a natural and helpful response.
+    
+    
+    add product ids at the end of the repsonse seperated by a pipe symbol like this: |product_id1,product_id2,product_id3 if the product ids are not present in the context, add |null
     """
     
     response = client.chat.completions.create(
@@ -101,6 +115,8 @@ def route_to_specialist(state: GraphState) -> str:
         return "policy_agent"
     elif state['action'] == AgentAction.BOOKING:
         return "booking_agent"
+    elif state['action'] == AgentAction.DB_QUERY:
+        return "products_agent"
     return "response_generator"
 
 # Create the graph
@@ -110,6 +126,7 @@ builder = StateGraph(GraphState)
 builder.add_node("primary_agent", primary_agent)
 builder.add_node("policy_agent", policy_agent)
 builder.add_node("booking_agent", booking_agent)
+builder.add_node("products_agent", products_agent)
 builder.add_node("response_generator", response_generator)
 
 # Add edges
@@ -122,6 +139,7 @@ builder.add_conditional_edges(
     {
         "policy_agent": "policy_agent",
         "booking_agent": "booking_agent",
+        "products_agent": "products_agent",
         "response_generator": "response_generator"
     }
 )
@@ -129,6 +147,7 @@ builder.add_conditional_edges(
 # Add edges from specialist agents to response generator
 builder.add_edge("policy_agent", "response_generator")
 builder.add_edge("booking_agent", "response_generator")
+builder.add_edge("products_agent", "response_generator")
 builder.add_edge("response_generator", END)
 
 # Compile the graph

@@ -24,3 +24,6 @@ agents/token.json
 agents/token.pickle
 agents/specialized_agents/credentials.json
 agents/specialized_agents/token.pickle
+
+# databases
+agents/specialized_agents/chroma_db

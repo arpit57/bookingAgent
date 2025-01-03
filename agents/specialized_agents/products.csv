@@ -1,0 +1,11 @@
+ProductID,Category,Subcategory,ProductName,Brand,Price,Stock,Rating,Description
+101,Fashion & Apparel,Men's Clothing,Casual T-Shirt,UniWear,15.99,120,4.5,Comfortable cotton t-shirt in various colors.
+102,Fashion & Apparel,Women's Shoes,Sports Sneakers,RunStyle,39.99,80,4.2,Lightweight and stylish running shoes for women.
+103,Electronics,Smartphones,Galaxy S22,Samsung,799.99,50,4.8,Latest Samsung flagship with cutting-edge features.
+104,Home & Kitchen,Cookware,Non-Stick Frying Pan,Chef's Choice,24.99,200,4.3,Durable non-stick pan ideal for everyday cooking.
+105,Beauty & Personal Care,Skincare,Hydrating Face Cream,GlowSkin,19.99,150,4.6,Deeply hydrating cream with natural ingredients.
+106,Grocery & Daily Needs,Fruits & Vegetables,Organic Apples,FreshFarms,4.99,300,4.7,"Crisp and sweet organic apples, sold in packs of 6."
+107,Books,Books & Novels,The Great Gatsby,Penguin Classics,9.99,60,4.9,Classic novel by F. Scott Fitzgerald.
+108,Toys & Stationery,Toys,Building Blocks Set,BlockMaster,29.99,100,4.4,Creative building blocks for kids aged 5+.
+109,Electronics,Laptops,MacBook Air (M2),Apple,999.99,20,4.9,"Thin, powerful, and lightweight laptop from Apple."
+110,Home & Kitchen,Decor,Table Lamp,LightGlow,34.99,75,4.5,Stylish table lamp with adjustable brightness.
